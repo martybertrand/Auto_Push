@@ -3,10 +3,7 @@ name: Auto Commit and Push
 on:
   schedule:
     - cron: '0 9,13,17,21 * * *' # Exécuter à 9h, 13h, 17h et 21h chaque jour
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+  workflow_dispatch: # Permet de déclencher manuellement le workflow
 
 jobs:
   build:
@@ -26,9 +23,9 @@ jobs:
         echo "Last run: $(date)" >> heartbeat.txt
 
     - name: Commit and push changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         git add .
         git commit -m "Auto commit: $(date)" || echo "No changes to commit"
         git push origin main
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
